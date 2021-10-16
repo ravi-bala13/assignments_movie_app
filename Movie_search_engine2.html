@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie search Engine2</title>
+</head>
+<style>
+    body{
+        background-color: black;
+        color: white;
+    }
+
+
+    #container{
+        margin-top: 40px;
+        padding-left: 50px;
+    }
+
+    img{
+        border-radius: 20px;
+        width: 200px;
+        
+    }
+
+    #main{
+        /* border: 1px solid white; */
+        width: 350px;
+        margin: auto;
+    }
+    input{
+        width: 230px;
+        height: 30px;
+    }
+    button{
+        width: 90px;
+        height: 37px;
+    }
+</style>
+<body>
+    
+    <div id="main">
+
+        <h1>Movie search Engine2 with error</h1>
+
+        <input type="text" id="movie" placeholder="Enter movie name">
+
+        <button onclick="Get_movie()">Get Movie</button>
+
+        <div id="container"></div>    
+
+    </div>
+
+</body>
+</html>
+
+<script>
+
+
+    var container = document.getElementById("container");
+
+    async function Get_movie(){
+        // console.log("hai")
+
+        container.innerHTML = null;
+
+        let movie = document.getElementById("movie").value;
+
+        let res = await fetch(            
+            // `http://www.omdbapi.com/?i=tt3896198&apikey=6ea40c94`
+            `https://www.omdbapi.com/?t=${movie}&apikey=6ea40c94`
+        );
+
+        // console.log('res:', res)
+
+        let data = await res.json();
+
+        console.log('data:', data)
+        console.log('datatype:', typeof(data))
+
+        Show_products(data);
+
+        function Show_products(prod){        
+            
+            let div = document.createElement("div");
+
+            let img = document.createElement("img");
+            // console.log('prod.Poster:', prod.Poster)
+                if(prod.Poster == undefined){
+                    
+                    img.src = "https://c.tenor.com/az538zZ1pS0AAAAM/sorry-my-fault.gif";
+                    let err_msg = document.createElement("h4");
+                        err_msg.innerText = "Sorry could not find movie you search"
+
+                    div.append(img, err_msg);
+
+                    container.append(div);
+                    return
+                }
+                img.src = prod.Poster;
+                console.log('img:', img)
+                
+                
+
+            let name = document.createElement("p");
+                name.innerHTML = "Name : " +  prod.Title;
+                console.log('name:', name)
+
+            let year = document.createElement("p");
+                year.innerHTML = "Year : " +  prod.Released;
+
+            let rating = document.createElement("p");
+                rating.innerHTML = "Ratings : " +  prod.imdbRating;
+        
+            div.append(img, name, year, rating);
+
+            container.append(div);
+
+        
+
+        }
+
+    }
+
+</script>

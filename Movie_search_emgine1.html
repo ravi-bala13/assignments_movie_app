@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie search Engine1</title>
+</head>
+<style>
+
+    body{
+        background-color: black;
+        color: white;
+    }
+
+
+    #container{
+        margin-top: 40px;
+        padding-left: 50px;
+    }
+
+    img{
+        border-radius: 20px;
+        width: 200px;
+        
+    }
+
+    #main{
+        /* border: 1px solid white; */
+        width: 350px;
+        margin: auto;
+    }
+    input{
+        width: 230px;
+        height: 30px;
+    }
+    button{
+        width: 90px;
+        height: 37px;
+    }
+</style>
+<body>
+
+    <div id="main">
+
+        <h1>Movie search Engine1</h1>
+
+        <input type="text" id="movie" placeholder="Enter movie name">
+
+        <button onclick="Get_movie()">Get Movie</button>
+
+        <div id="container"></div>    
+
+    </div>
+    
+    
+
+</body>
+</html>
+
+<script>
+
+
+    var container = document.getElementById("container");
+
+    async function Get_movie(){
+        // console.log("hai")
+
+        container.innerHTML = null;
+
+        let movie = document.getElementById("movie").value;
+
+        let res = await fetch(            //which means fetching the data this is the syntax for it
+            
+            `https://www.omdbapi.com/?t=${movie}&apikey=6ea40c94`
+
+        );
+
+        // console.log('res:', res)
+
+        let data = await res.json(); // which means collecting the data from the API 
+
+        console.log('data:', data)
+        console.log('datatype:', typeof(data))
+
+        Show_products(data);
+
+        function Show_products(prod){        
+            
+            let div = document.createElement("div");
+
+            let img = document.createElement("img");
+                img.src = prod.Poster;
+                console.log('img:', img)
+
+            let name = document.createElement("p");
+                name.innerHTML = "Name : " +  prod.Title;
+                console.log('name:', name)
+
+            let year = document.createElement("p");
+                year.innerHTML = "Year : " +  prod.Released;
+
+            let rating = document.createElement("p");
+                rating.innerHTML = "Ratings : " +  prod.imdbRating;
+        
+            div.append(img, name, year, rating);
+
+            container.append(div);
+
+        
+
+        }
+
+    }
+
+</script>
