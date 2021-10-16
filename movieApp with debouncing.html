@@ -248,19 +248,21 @@
 
             movie_div.append(each_div);
 
-            movie_div.onclick = function() {
+            each_div.onclick = function() {
 
                 // Goto_movie(movie)
                 
-                
+                console.log("movie",movie);
                 movie_div.style.display = "none";
 
                 let goto_div = document.getElementById("searched-movie");
 
                 let img = document.createElement("img");
                     img.src = movie.Poster;
+                    img.style.width = "100px";
+                    
 
-                goto_div.append(img)
+                goto_div.append(img, details_div)
 
             }
         });
