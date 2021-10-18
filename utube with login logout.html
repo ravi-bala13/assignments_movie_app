@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube with login credential</title>
+    
+    <style>
+        body{
+            background-color: #202020;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: row;
+            /* border: 1px solid white; */
+        }
+
+        .leftbar{
+            width: 250px;
+            /* border: 1px solid white; */
+        }
+
+        .rightbar{
+            width: 80%;
+            /* border: 1px solid red; */
+        }
+
+        #navbar{
+
+            height: 50px;
+            /* border: 1px solid white; */
+            display: flex;
+            flex-direction: row;
+        
+        }
+        /* search Box */
+        #query{
+            width: 600px;
+            height: 40px;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid white;
+            margin-left: 100px;
+            background-color: #121212;
+            color: white;
+        }
+
+        .search{
+            height: 43px;
+            width: 65px;
+            background-color: #313131;
+            margin-right: 140px;
+            color: white;
+        }
+
+        .options{
+            width: 100%;
+        }
+
+        #videos{
+            display: grid;
+            grid-template-columns: repeat(4,20%);
+            grid-gap: 5%;
+            padding-left: 20px;
+            overflow: scroll;
+        }
+        #videos::-webkit-scrollbar{
+            display: none;
+        }
+
+        #login-button, #logout-button{
+            width: 100px;
+            height: 40px;
+        }
+        #logout-button{
+            display: none;
+        }
+
+    </style>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+</head>
+<body>
+    
+    <div id="container">
+
+        <div class="leftbar">
+
+            <img src="https://i.ibb.co/kJqNPvk/4.jpg" alt="noload">
+
+        </div>
+        <div class="rightbar">
+            <div id="navbar">
+
+                <input type="text" placeholder="Search" id="query">
+                <button onclick="searchVideos()" class="search">
+                    <span class="material-icons-outlined">search</span>                    
+                </button>
+                <!-- <img src="https://i.ibb.co/PG6d8v1/5.jpg" alt="noload"> -->
+                <button id="login-button" onclick="Goto_login()"> Login</button>
+                <button id="logout-button" onclick="Logout()">Logout</button>
+
+            </div>
+
+            <div>
+                <img class="options" src="https://i.ibb.co/D4TM5QF/6.jpg" alt="">
+            </div>
+
+            <div id="videos">
+
+            </div>
+
+        </div>
+        
+
+    </div>
+    
+
+</body>
+</html>
+<script>
+
+    get_username();
+
+
+    function Goto_login(){
+
+        window.location.href = "utube login.html";
+
+        get_username();
+
+        // let btn = document.getElementById("login-button");
+        //     btn.innerText = "bala";
+        
+    }
+
+    //API key for you tube  AIzaSyDTWEh_7pr0ci-Any0eApNeXbhHEZdRTA0
+    
+
+    async function searchVideos(){
+
+        let query = document.getElementById("query").value;    
+
+        let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyDTWEh_7pr0ci-Any0eApNeXbhHEZdRTA0&maxResults=12`);
+
+        let data = await res.json();
+        console.log('data:', data)
+
+        appendVideos(data.items);
+    }
+
+    function appendVideos(video_data){
+      videos.innerHTML = null;
+      
+      // video_data.forEach( ( { id } ) => {
+      // console.log('id:', id)
+
+      video_data.forEach(({ id: { videoId }}) => {
+      console.log('videoId:', videoId)
+
+        let div = document.createElement("div");
+
+        // div.innerHTML = `<iframe width="640" height="360" src="https://www.youtube.com/embed/N18czV5tj5o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+        div.innerHTML = `<iframe width="240" height="160" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>`       
+        
+        div.style.marginTop = "20px";
+
+        videos.append(div);
+      })
+    }
+
+    searchVideos();
+
+    function get_username(){
+
+        let logout_btn = document.getElementById("logout-button");
+            
+        
+
+        let login_div = document.getElementById("login-button");
+
+        let user_details = JSON.parse(localStorage.getItem("login_details"));
+
+        // console.log('user_details[0]:', user_details[0])
+
+            if(user_details[0] != []){
+                console.log('user_details[0]:', user_details[0])
+                login_div.innerText = user_details[0].username;
+
+                logout_btn.style.display = "block";
+            }
+
+    }
+
+    function Logout(){
+        
+        // let user_details = JSON.parse(localStorage.getItem("login_details"));
+
+        localStorage.setItem("login_details", JSON.stringify( [] ));
+
+        window.location.href = "utube with login logout.html";
+
+    }
+</script>
